@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Library.Data.Models
@@ -13,6 +14,12 @@ namespace Library.Data.Models
         public DateTime BirthDate { get; set; }
         public string TelephoneNumber { get; set; }
 
-        //public virtual LibraryCard LibraryCard { get; set; }
+        [NotMapped]
+        public string FullName
+        {
+            get { return "FirstName" + " " + "LastName"; }
+        }
+        public virtual LibraryCard LibraryCard { get; set; }
+        public virtual LibraryBranch HomeLibraryBranch { get; set; }
     }
 }
