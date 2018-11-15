@@ -1,0 +1,31 @@
+﻿@model Library.Web.Models.Catalog.AssetIndexModel
+
+<div class="container">
+    <div id="assets">
+        <h3>Library Catalog</h3>
+        <table class="table table-condensed" id="catalogIndexTable">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Author / Director</th>
+                <th>Dewey Call Number</th>
+                <th># Copies</th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.Assets)
+                {
+                <tr class="assetRow">
+                    <td><img src="@item.ImageUrl" class="imageCell" /></td>
+                    <td><img src="@item.Title" class="titleCell" /></td>
+                    <td><img src="@item.AuthorOrDirector" class="authorCell" /></td>
+                    <td><img src="@item.DeweyCallNumber" class="deweyCell" /></td>
+                    <td><img src="@item.NumberOfCopies" class="copiesCell" /></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
