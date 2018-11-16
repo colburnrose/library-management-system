@@ -36,5 +36,16 @@ namespace Library.Data.UnitOfWork
         private GenericRepository<Video> _videoRepository;
 
         #endregion
+
+        public GenericRepository<Book> BookRepository => _bookRepository ?? (_bookRepository = new GenericRepository<Book>(_loggedInUser,_context));
+        public GenericRepository<BranchHours> BranchRepository => _branchHoursRepository ?? (_branchHoursRepository = new GenericRepository<BranchHours>(_loggedInUser, _context));
+        public GenericRepository<Checkout> CheckoutRepository => _checkoutRepository ?? (_checkoutRepository = new GenericRepository<Checkout>(_loggedInUser, _context));
+        public GenericRepository<Hold> HoldRepository => _holdRepository ?? (_holdRepository = new GenericRepository<Hold>(_loggedInUser, _context));
+        public GenericRepository<LibraryAsset> LibraryAssetRepository => _libraryAssetRepository ?? (_libraryAssetRepository = new GenericRepository<LibraryAsset>(_loggedInUser, _context));
+        public GenericRepository<LibraryBranch> LibraryBranchRepository => _libraryBranchRepository ?? (_libraryBranchRepository = new GenericRepository<LibraryBranch>(_loggedInUser, _context));
+        public GenericRepository<LibraryCard> LibraryCardRepository => _libraryCardRepository ?? (_libraryCardRepository = new GenericRepository<LibraryCard>(_loggedInUser, _context));
+        public GenericRepository<Patron> PatronRepository => _patronRepository ?? (_patronRepository = new GenericRepository<Patron>(_loggedInUser, _context));
+        public GenericRepository<Status> StatusRepository => _statusRepository ?? (_statusRepository = new GenericRepository<Status>(_loggedInUser, _context));
+        public GenericRepository<Video> VideoRepository => _videoRepository ?? (_videoRepository = new GenericRepository<Video>(_loggedInUser, _context));
     }
 }
