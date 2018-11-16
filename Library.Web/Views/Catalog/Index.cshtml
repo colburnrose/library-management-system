@@ -16,13 +16,17 @@
             <tbody>
                 @foreach (var item in @Model.Assets)
                 {
-                <tr class="assetRow">
-                    <td><img src="@item.ImageUrl" class="imageCell" /></td>
-                    <td class="catalogTitle">"@item.Title"</td>
-                    <td class="catalogAuthor">"@item.AuthorOrDirector"</td>
-                    <td class="catalogCallNumber">"@item.DeweyCallNumber"</td>
-                    <td class="catalogCopy">"@item.NumberOfCopies"</td>
-                </tr>
+                    <tr class="assetRow">
+                        <td>
+                            <a asp-controller="Catalog" asp-action="Detail" asp-route-id="@item.Id">
+                                <img src="@item.ImageUrl" class="imageCell"/>
+                            </a>                          
+                        </td>
+                        <td class="catalogTitle">"@item.Title"</td>
+                        <td class="catalogAuthor">"@item.AuthorOrDirector"</td>
+                        <td class="catalogCallNumber">"@item.DeweyCallNumber"</td>
+                        <td class="catalogCopy">"@item.NumberOfCopies"</td>
+                    </tr>
                 }
             </tbody>
         </table>
