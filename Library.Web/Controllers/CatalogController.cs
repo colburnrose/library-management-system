@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.Data.Interface;
+using Library.Web.Models;
 using Library.Web.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,28 @@ namespace Library.Web.Controllers
             }; 
 
             return View(model);
+        }
+
+        public IActionResult GetCatalogDetails(int id)
+        {
+            var details = _asset.GetById(id);
+
+            var coll = new AssetDetailViewModel()
+            {
+                AssetId = id,
+                Title = details.Title,
+                AuthorOrDirector = _asset.GetAuthorOrDirector(id),
+                Type = _asset.GetType(id),
+                Year = details.Year,
+                ISBN = _asset.GetIsbn(id),
+                DeweyCallNumber = _asset.GetDeweyIndex(id),
+                Status = details.Status.Name,
+                Cost = details.Cost,
+                CurrentLocation = _asset.GetCurrentLocation(id).Name,
+
+            };
+
+            return View(coll);
         }
     }
 }
