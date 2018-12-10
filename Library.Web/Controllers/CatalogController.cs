@@ -40,7 +40,7 @@ namespace Library.Web.Controllers
             return View(model);
         }
 
-        public IActionResult GetCatalogDetails(int id)
+        public IActionResult Detail(int id)
         {
             var details = _asset.GetById(id);
 
