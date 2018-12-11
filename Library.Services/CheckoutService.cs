@@ -83,20 +83,22 @@ namespace Library.Services
 
         public void MarkFound(int assetId)
         {
-            var now = DateTime.Now;
             var item = _context.LibraryAssets.FirstOrDefault(b => b.Id == assetId);
             if (item != null)
             {
                 _context.Update(item);
                 item.Status = _context.Statuses.FirstOrDefault(s => s.Name == "Available");
             }
-            // remove any existing checkouts on the item.
-            var checkout = _context.Checkouts.FirstOrDefault(c => c.LibraryAsset.Id == assetId);
-            if (checkout != null)
-            {
-                _context.Remove(checkout);
-            }
 
+            RemoveExistingChecktous(assetId);
+            ClosingCheckoutHistory(assetId);
+            
+            _context.SaveChanges();
+        }
+
+        private void ClosingCheckoutHistory(int assetId)
+        {
+            var now = DateTime.Now;
             // close any existing checkout history
             var history = _context.CheckoutHistories.FirstOrDefault(s => s.LibraryAsset.Id == assetId && s.CheckedIn == null);
             if (history != null)
@@ -105,7 +107,16 @@ namespace Library.Services
                 history.CheckedIn = now;
             }
 
-            _context.SaveChanges();
+        }
+
+        private void RemoveExistingChecktous(int assetId)
+        {
+            // remove any existing checkouts on the item.
+            var checkout = _context.Checkouts.FirstOrDefault(c => c.LibraryAsset.Id == assetId);
+            if (checkout != null)
+            {
+                _context.Remove(checkout);
+            }
         }
 
         public void CheckOutItem(int assetId, int libraryCardId)
