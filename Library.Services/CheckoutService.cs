@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Library.Data;
@@ -50,7 +51,27 @@ namespace Library.Services
 
         public void PlaceHold(int assestId, int libraryCardId)
         {
-            throw new NotImplementedException();
+            var today = DateTime.Today;
+            var asset = _context.LibraryAssets.FirstOrDefault(s => s.Id == assestId);
+            if (asset == null)
+            {
+                throw new DataException("Asset is invalid.");
+            }
+            if (asset.Status.Name == "Available")
+            {
+                UpdateMarkFound(assestId, "On Hold");
+            }
+            var card = _context.LibraryCards.FirstOrDefault(s => s.Id == libraryCardId);
+
+            var hold = new Hold()
+            {
+                HoldPlaced = today,
+                LibraryAsset = asset,
+                LibraryCard = card,
+            };
+
+            _context.Add(hold);
+            _context.SaveChanges();
         }
 
         public string GetCurrentHoldPatronName(int id)
@@ -199,16 +220,19 @@ namespace Library.Services
             _context.SaveChanges();
         }
 
-        private void CheckoutEarliestHold(int assetId, IQueryable<Hold> currentHold)
+        private void CheckoutEarliestHold(int assetId, IEnumerable<Hold> currentHold)
         {
             var recentHold = currentHold.OrderBy(h => h.HoldPlaced).FirstOrDefault();
 
-            var card = recentHold.LibraryCard;
+            if (recentHold != null)
+            {
+                var card = recentHold.LibraryCard;
 
-            _context.Remove(recentHold);
-            _context.SaveChanges();
+                _context.Remove(recentHold);
+                _context.SaveChanges();
 
-            CheckOutItem(assetId, card.Id);
+                CheckOutItem(assetId, card.Id);
+            }
         }
     }
 }
