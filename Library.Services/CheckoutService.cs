@@ -49,6 +49,27 @@ namespace Library.Services
                 .Where(h => h.LibraryAsset.Id == id);
         }
 
+        public string GetCurrentCheckoutPatron(int assetId)
+        {
+            var checkout = GetCheckoutByAssetId(assetId);
+            if (checkout == null)
+            {
+                return "No item checked out.. ";
+            }
+            var card = checkout.LibraryCard.Id;
+            var patron = _context.Patrons.Include(p => p.LibraryCard.Id == card).FirstOrDefault();
+
+            return patron?.FirstName + " " + patron?.LastName;
+        }
+
+        private Checkout GetCheckoutByAssetId(int assetId)
+        {
+            return _context.Checkouts
+                .Include(h => h.LibraryAsset)
+                .Include(h => h.LibraryCard)
+                .FirstOrDefault(c => c.LibraryAsset.Id == assetId);
+        }
+
         public void PlaceHold(int assetId, int libraryCardId)
         {
             var today = DateTime.Today;
@@ -97,7 +118,15 @@ namespace Library.Services
 
         public DateTime GetCurrentHoldPlaced(int holdid)
         {
-            throw new NotImplementedException();
+            var placedHold = GetPlacedHold(holdid);
+            return placedHold;
+        }
+
+        private DateTime GetPlacedHold(int holdid)
+        {
+            var placeHold = _context.Holds.Include(h => h.LibraryAsset).Include(h => h.LibraryCard)
+                .FirstOrDefault(w => w.Id == holdid);
+            return placeHold.HoldPlaced;
         }
 
         public IEnumerable<Hold> GetCurrentHolds(int id)
