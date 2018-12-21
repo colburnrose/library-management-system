@@ -49,17 +49,17 @@ namespace Library.Services
                 .Where(h => h.LibraryAsset.Id == id);
         }
 
-        public void PlaceHold(int assestId, int libraryCardId)
+        public void PlaceHold(int assetId, int libraryCardId)
         {
             var today = DateTime.Today;
-            var asset = _context.LibraryAssets.FirstOrDefault(s => s.Id == assestId);
+            var asset = _context.LibraryAssets.FirstOrDefault(s => s.Id == assetId);
             if (asset == null)
             {
                 throw new DataException("Asset is invalid.");
             }
             if (asset.Status.Name == "Available")
             {
-                UpdateMarkFound(assestId, "On Hold");
+                UpdateMarkFound(assetId, "On Hold");
             }
             var card = _context.LibraryCards.FirstOrDefault(s => s.Id == libraryCardId);
 
@@ -74,12 +74,28 @@ namespace Library.Services
             _context.SaveChanges();
         }
 
-        public string GetCurrentHoldPatronName(int id)
+        public string GetCurrentHoldPatronName(int holdid)
         {
-            throw new NotImplementedException();
+            var currentHold = _context.Holds
+                .Include(s => s.LibraryAsset)
+                .Include(s => s.LibraryCard)
+                .FirstOrDefault(s => s.Id == holdid);
+
+            if (currentHold == null)
+            {
+                throw new DataException("Patron currently has no holds.");
+            }
+
+            var card = currentHold.LibraryCard.Id;
+
+            var patron = _context.Patrons
+                .Include(p => p.LibraryCard)
+                .FirstOrDefault(p => p.Id == card);
+
+                return patron?.FirstName + " " + patron?.LastName;
         }
 
-        public DateTime GetCurrentHoldPlaced(int id)
+        public DateTime GetCurrentHoldPlaced(int holdid)
         {
             throw new NotImplementedException();
         }
@@ -127,11 +143,13 @@ namespace Library.Services
         {
             // close any existing checkout history
             var history = _context.CheckoutHistories.FirstOrDefault(s => s.LibraryAsset.Id == assetId && s.CheckedIn == null);
-            if (history != null)
+            if (history == null)
             {
-                _context.Update(history);
-                history.CheckedIn = now;
+                throw new DataException("No checkout history.");
             }
+
+            _context.Update(history);
+            history.CheckedIn = now;
 
         }
 
