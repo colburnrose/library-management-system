@@ -62,6 +62,12 @@ namespace Library.Services
             return patron?.FirstName + " " + patron?.LastName;
         }
 
+        public bool IsCheckedOut(int id)
+        {
+            var isCheckedOut = _context.Checkouts.Any(c => c.LibraryAsset.Id == id);
+            return isCheckedOut;
+        }
+
         private Checkout GetCheckoutByAssetId(int assetId)
         {
             return _context.Checkouts

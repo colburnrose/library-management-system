@@ -21,13 +21,13 @@ namespace Library.Web.Models
         public string ImageUrl { get; set; }
         public string CustomerName { get; set; }
         public Checkout LatestCheckout { get; set; }
-        public List<CheckoutHistory> CheckoutHistory { get; set; }
-        public List<AssetHoldModel> CurrentHolds { get; set; }
+        public IEnumerable<CheckoutHistory> CheckoutHistory { get; set; }
+        public IEnumerable<AssetHoldModel> CurrentHolds { get; set; }
     }
 
     public class AssetHoldModel
     {
         public string PatronName { get; set; }
-        public DateTime HoldPlaced { get; set; }
+        public string HoldPlaced { get; set; }
     }
 }
