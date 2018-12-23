@@ -12,7 +12,7 @@ namespace Library.Services
 {
     public class CheckoutService : ICheckout
     {
-        private LibraryContext _context;
+        private readonly LibraryContext _context;
 
         public CheckoutService(LibraryContext context)
         {
@@ -126,6 +126,10 @@ namespace Library.Services
         {
             var placeHold = _context.Holds.Include(h => h.LibraryAsset).Include(h => h.LibraryCard)
                 .FirstOrDefault(w => w.Id == holdid);
+            if (placeHold == null)
+            {
+                throw new DataException("No holds have been placed on your account.");
+            }
             return placeHold.HoldPlaced;
         }
 

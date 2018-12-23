@@ -11,11 +11,13 @@ namespace Library.Web.Controllers
 {
     public class CatalogController : Controller
     {
-        private ILibraryAsset _asset;
+        private readonly ILibraryAsset _asset;
+        private readonly ICheckout _checkout;
 
-        public CatalogController(ILibraryAsset assets)
+        public CatalogController(ILibraryAsset assets, ICheckout checkouts)
         {
             _asset = assets;
+            _checkout = checkouts;
         }
 
         public IActionResult Index()
