@@ -7,6 +7,7 @@ using Library.Web.Models;
 using Library.Web.Models.Catalog;
 using Library.Web.Models.Checkout;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
 
 namespace Library.Web.Controllers
 {
@@ -72,7 +73,7 @@ namespace Library.Web.Controllers
             return View(model);
         }
 
-        public IActionResult GetCheckout(int id)
+        public IActionResult Checkout(int id)
         {
             var asset = _asset.GetById(id);
 
@@ -86,6 +87,49 @@ namespace Library.Web.Controllers
             }; 
 
             return View(model);
+        }
+
+        public IActionResult Hold(int id)
+        {
+            var asset = _asset.GetById(id);
+
+            var model = new CheckoutModel()
+            {
+                AssetId = id,
+                ImageUrl = asset.ImageUrl,
+                Title = asset.Title,
+                LibraryCardId = "",
+                IsCheckedOut = _checkout.IsCheckedOut(id),
+                HoldCount = _checkout.GetCurrentHolds(id).Count(),
+            };
+
+            return View(model);
+        }
+
+        public IActionResult MarkLost(int assetId)
+        {
+            _checkout.MarkLost(assetId);
+            return RedirectToAction("Detail", new {id = assetId});
+        }
+
+        public IActionResult MarkFound(int assetId)
+        {
+            _checkout.MarkFound(assetId);
+            return RedirectToAction("Detail", new { id = assetId });
+        }
+
+        [HttpPost]
+        public IActionResult PlaceCheckout(int assetId, int libraryCardId)
+        {
+            _checkout.CheckInItem(assetId, libraryCardId);
+            return RedirectToAction("Detail", new {id = assetId});
+        }
+
+        [HttpPost]
+        public IActionResult PlaceHold(int assetId, int libraryCardId)
+        {
+            _checkout.PlaceHold(assetId, libraryCardId);
+            return RedirectToAction("Detail", new { id = assetId });
         }
     }
 }

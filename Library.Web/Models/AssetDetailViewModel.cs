@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Library.Data.Models;
 
+
 namespace Library.Web.Models
 {
     public class AssetDetailViewModel
@@ -20,7 +21,7 @@ namespace Library.Web.Models
         public string CurrentLocation { get; set; }
         public string ImageUrl { get; set; }
         public string CustomerName { get; set; }
-        public Checkout LatestCheckout { get; set; }
+        public Data.Models.Checkout LatestCheckout { get; set; }
         public IEnumerable<CheckoutHistory> CheckoutHistory { get; set; }
         public IEnumerable<AssetHoldModel> CurrentHolds { get; set; }
     }
