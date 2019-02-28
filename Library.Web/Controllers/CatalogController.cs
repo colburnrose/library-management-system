@@ -51,7 +51,7 @@ namespace Library.Web.Controllers
             var currentHolds = _checkout.GetCurrentHolds(id)
                 .Select(s => new AssetHoldModel()
                 {
-                    HoldPlaced = _checkout.GetCurrentHoldPlaced(s.Id).ToString("d"),
+                    HoldPlaced = _checkout.GetCurrentHoldPlaced(s.Id),
                     PatronName = _checkout.GetCurrentHoldPatronName(s.Id),
                 });
 
@@ -65,7 +65,7 @@ namespace Library.Web.Controllers
                 Status = asset.Status.Name,
                 ImageUrl = asset.ImageUrl,
                 AuthorOrDirector = _asset.GetAuthorOrDirector(id),
-                CurrentLocation = _asset.GetCurrentLocation(id).Name,
+                CurrentLocation = _asset.GetCurrentLocation(id)?.Name,
                 DeweyCallNumber = _asset.GetDeweyIndex(id),
                 CheckoutHistory = _checkout.GetCheckoutHistory(id),
                 CurrentHolds = currentHolds

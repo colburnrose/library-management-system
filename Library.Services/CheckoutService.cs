@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Library.Data;
@@ -79,7 +80,7 @@ namespace Library.Services
         public void PlaceHold(int assetId, int libraryCardId)
         {
             var today = DateTime.Today;
-            var asset = _context.LibraryAssets.FirstOrDefault(s => s.Id == assetId);
+            var asset = _context.LibraryAssets.Include(a => a.Status).FirstOrDefault(s => s.Id == assetId);
             if (asset == null)
             {
                 throw new DataException("Asset is invalid.");
@@ -122,10 +123,15 @@ namespace Library.Services
                 return patron?.FirstName + " " + patron?.LastName;
         }
 
-        public DateTime GetCurrentHoldPlaced(int holdid)
+        public string GetCurrentHoldPlaced(int holdid)
         {
-            var placedHold = GetPlacedHold(holdid);
-            return placedHold;
+            var hold = _context.Holds
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.LibraryCard)
+                .Where(v => v.Id == holdid);
+
+            return hold.Select(a => a.HoldPlaced)
+                .FirstOrDefault().ToString(CultureInfo.InvariantCulture);
         }
 
         private DateTime GetPlacedHold(int holdid)

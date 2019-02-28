@@ -32,8 +32,8 @@
             @if (Model.Status == "Checked Out")
             {
                 <p id="itemPatron">Checked Out By: @Model.CustomerName</p>
-                <p><a class="btn btn-lg btn-success" role="button" asp-controller="Catalog" asp-action="CheckedIn" asp-route-id="@Model.AssetId">Checked In</a></p>
-                <p><a class="btn btn-lg btn-warning" role="button" asp-controller="Catalog" asp-action="OnHold" asp-route-id="@Model.AssetId">On Hold</a></p>
+                <p><a class="btn btn-lg btn-success" role="button" asp-controller="Catalog" asp-action="CheckIn" asp-route-id="@Model.AssetId">Checked In</a></p>
+                <p><a class="btn btn-lg btn-warning" role="button" asp-controller="Catalog" asp-action="Hold" asp-route-id="@Model.AssetId">Place Hold</a></p>
             }
 
             @if (Model.Status == "Available")

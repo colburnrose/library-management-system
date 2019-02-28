@@ -19,7 +19,7 @@ namespace Library.Data.Interface
 
         void PlaceHold(int assestId, int libraryCardId);
         string GetCurrentHoldPatronName(int id);
-        DateTime GetCurrentHoldPlaced(int id);
+        string GetCurrentHoldPlaced(int id);
         IEnumerable<Hold> GetCurrentHolds(int id);
 
         void MarkLost(int assetId);
