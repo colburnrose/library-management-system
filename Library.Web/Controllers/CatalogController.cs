@@ -83,7 +83,7 @@ namespace Library.Web.Controllers
                 ImageUrl = asset.ImageUrl,
                 Title = asset.Title,
                 LibraryCardId = "",
-                IsCheckedOut = _checkout.IsCheckedOut(id)
+                IsCheckedOut = !_checkout.IsCheckedOut(id)
             }; 
 
             return View(model);
@@ -121,7 +121,7 @@ namespace Library.Web.Controllers
         [HttpPost]
         public IActionResult PlaceCheckout(int assetId, int libraryCardId)
         {
-            _checkout.CheckInItem(assetId, libraryCardId);
+            _checkout.CheckOutItem(assetId, libraryCardId);
             return RedirectToAction("Detail", new {id = assetId});
         }
 

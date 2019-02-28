@@ -168,13 +168,13 @@ namespace Library.Services
             _context.SaveChanges();
         }
 
-        private void UpdateMarkFound(int assetId, string v)
+        private void UpdateMarkFound(int assetId, string status)
         {
             var item = _context.LibraryAssets.FirstOrDefault(b => b.Id == assetId);
             if (item != null)
             {
                 _context.Update(item);
-                item.Status = _context.Statuses.FirstOrDefault(s => s.Name == "Available");
+                item.Status = _context.Statuses.FirstOrDefault(s => s.Name == status);
             }
         }
 
@@ -182,14 +182,11 @@ namespace Library.Services
         {
             // close any existing checkout history
             var history = _context.CheckoutHistories.FirstOrDefault(s => s.LibraryAsset.Id == assetId && s.CheckedIn == null);
-            if (history == null)
+            if (history != null)
             {
-                throw new DataException("No checkout history.");
-            }
-
-            _context.Update(history);
-            history.CheckedIn = now;
-
+                _context.Update(history);
+                history.CheckedIn = now;
+            }         
         }
 
         private void RemoveExistingChecktous(int assetId)
