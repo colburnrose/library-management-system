@@ -53,12 +53,10 @@ namespace Library.Services
         public string GetCurrentCheckoutPatron(int assetId)
         {
             var checkout = GetCheckoutByAssetId(assetId);
-            if (checkout == null)
-            {
-                return "No item checked out.. ";
-            }
+            if (checkout == null) return "Not checked out.";
+
             var card = checkout.LibraryCard.Id;
-            var patron = _context.Patrons.Include(p => p.LibraryCard.Id == card).FirstOrDefault();
+            var patron = _context.Patrons.Include(p => p.LibraryCard).First(c => c.LibraryCard.Id == card);
 
             return patron?.FirstName + " " + patron?.LastName;
         }
@@ -109,10 +107,7 @@ namespace Library.Services
                 .Include(s => s.LibraryCard)
                 .FirstOrDefault(s => s.Id == holdid);
 
-            if (currentHold == null)
-            {
-                throw new DataException("Patron currently has no holds.");
-            }
+            if (currentHold == null) return "Not checked out.";
 
             var card = currentHold.LibraryCard.Id;
 
@@ -250,7 +245,7 @@ namespace Library.Services
             return _context.Checkouts.Any(c => c.LibraryAsset.Id == assetId);
         }
 
-        public void CheckInItem(int assetId, int libraryCardId)
+        public void CheckInItem(int assetId)
         {
             var now = DateTime.Now;
             var item = _context.LibraryAssets.FirstOrDefault(s => s.Id == assetId);
@@ -274,6 +269,7 @@ namespace Library.Services
             if (currentHold.Any())
             {
                 CheckoutEarliestHold(assetId, currentHold);
+                //return;
             }
 
             UpdateMarkFound(assetId, "Available");

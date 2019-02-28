@@ -28,7 +28,7 @@ namespace Library.Web.Models
 
     public class AssetHoldModel
     {
-        public string PatronName { get; set; }
+        public string CustomerName { get; set; }
         public string HoldPlaced { get; set; }
     }
 }

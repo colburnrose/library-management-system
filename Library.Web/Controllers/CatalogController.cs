@@ -52,7 +52,7 @@ namespace Library.Web.Controllers
                 .Select(s => new AssetHoldModel()
                 {
                     HoldPlaced = _checkout.GetCurrentHoldPlaced(s.Id),
-                    PatronName = _checkout.GetCurrentHoldPatronName(s.Id),
+                    CustomerName = _checkout.GetCurrentHoldPatronName(s.Id),
                 });
 
             var model = new AssetDetailViewModel()
@@ -68,9 +68,16 @@ namespace Library.Web.Controllers
                 CurrentLocation = _asset.GetCurrentLocation(id)?.Name,
                 DeweyCallNumber = _asset.GetDeweyIndex(id),
                 CheckoutHistory = _checkout.GetCheckoutHistory(id),
-                CurrentHolds = currentHolds
+                CurrentHolds = currentHolds,
+                CustomerName = _checkout.GetCurrentCheckoutPatron(id)
             };
             return View(model);
+        }
+
+        public IActionResult CheckIn(int id)
+        {
+            _checkout.CheckInItem(id);
+            return RedirectToAction("Detail", new {id = id});
         }
 
         public IActionResult Checkout(int id)
@@ -83,7 +90,7 @@ namespace Library.Web.Controllers
                 ImageUrl = asset.ImageUrl,
                 Title = asset.Title,
                 LibraryCardId = "",
-                IsCheckedOut = !_checkout.IsCheckedOut(id)
+                IsCheckedOut = _checkout.IsCheckedOut(id)
             }; 
 
             return View(model);
